@@ -1,0 +1,10 @@
+links:
+  type: array
+  items:
+    type: object
+    properties:
+      href:
+        type: string
+      rel: string,
+      type : string
+      enum: ["GET", "POST", "PATCH", "DELETE"]

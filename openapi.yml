@@ -1,0 +1,45 @@
+openapi: 3.0.2
+info:
+  title: IST REST Api
+  version: "1.0"
+paths:
+  /students:
+    get:
+      tags:
+        - Students
+      operationId: getStudents
+      responses:
+        200:
+          description: Retrieve all existing students.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Student"
+components:
+  schemas:
+    Student:
+      $ref: "./entities/Student.yml#/Student"
+    Teacher:
+      $ref: "./entities/Teacher.yml#/Teacher"
+    Guardian:
+      $ref: "./entities/Guardian.yml#/Guardian"
+    Address:
+      $ref: "./entities/Address.yml#/Address"
+    Role:
+      $ref: "./entities/Role.yml#/Role"
+    School:
+      $ref: "./entities/School.yml#/School"
+    Grade:
+      $ref: "./entities/Grade.yml#/Grade"
+    Subject:
+      $ref: "./entities/Subject.yml#/Subject"
+    Case:
+      $ref: "./entities/Case.yml#/Case"
+    Schedule:
+      $ref: "./entities/Schedule.yml#/Schedule"
+    Journal:
+      $ref: "./entities/Journal.yml#/Journal"
+    Admission:
+      $ref: "./entities/Admission.yml#/Admission"
+    Archive:
+      $ref: "./entities/Archive.yml#/Archive"
