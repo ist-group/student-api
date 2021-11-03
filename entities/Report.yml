@@ -1,4 +1,4 @@
-Archive:
+Report:
   type: object
   properties:
     id:

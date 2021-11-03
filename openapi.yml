@@ -41,5 +41,5 @@ components:
       $ref: "./entities/Journal.yml#/Journal"
     Admission:
       $ref: "./entities/Admission.yml#/Admission"
-    Archive:
-      $ref: "./entities/Archive.yml#/Archive"
+    Report:
+      $ref: "./entities/Report.yml#/Report"
