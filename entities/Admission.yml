@@ -3,6 +3,28 @@ Admission:
   properties:
     id:
       type: string
+    schoolId:
+      type: string
+      format: uuid
+    start_at:
+      type: string
+      format: date
+    end_at:
+      type: string
+      format: date
+    childId:
+      type: string
+      format: uuid
+    guardians:
+      type: array
+      items:
+        id:
+          type: string
+          format: uuid
+        first_name:
+          type: string
+        last_name:
+          type: string
     meta:
       links:
         $ref: "./Link.yml#/links"

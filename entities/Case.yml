@@ -1,8 +1,0 @@
-Case:
-  type: object
-  properties:
-    id:
-      type: string
-    meta:
-      links:
-        $ref: "./Link.yml#/links"

@@ -3,6 +3,9 @@ Student:
   properties:
     id:
       type: string
+    email:
+      type: string
+      format: email
     meta:
       links:
         $ref: "./Link.yml#/links"

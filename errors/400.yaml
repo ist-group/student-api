@@ -1,0 +1,18 @@
+BadRequest:
+  type: object
+  properties:
+    trace:
+      type: string
+      description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+      format: uuid,
+    errors:
+      type: array
+      items:
+        type: object
+        properties:
+          code:
+            type: string
+            description: a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem
+          message:
+            type: string
+            description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!

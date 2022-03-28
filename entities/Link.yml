@@ -5,6 +5,8 @@ links:
     properties:
       href:
         type: string
-      rel: string,
-      type : string
-      enum: ["GET", "POST", "PATCH", "DELETE"]
+      rel:
+        type : string
+      method:
+        type: string
+        enum: ["GET", "POST", "PATCH", "DELETE"]

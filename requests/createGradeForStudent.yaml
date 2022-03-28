@@ -1,0 +1,31 @@
+description: Create a a new grade for a student. Locked defaults to false
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        schoolId:
+          type: string
+          format: uuid
+        grade:
+          type: string
+        subjectId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        locked:
+          type: boolean
+        registeredAt:
+          type: string
+          format: date-time
+        gradingTeacherId:
+          type: string
+          format: uuid
+required:
+  - schoolId
+  - grade
+  - type
+  - subjectId
+  - gradingTeacherId
+  - registeredAt

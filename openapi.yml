@@ -14,9 +14,147 @@ paths:
           content:
             application/json:
               schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+  /students/{id}:
+    get:
+      tags:
+        - Students
+      operationId: getStudentById
+      responses:
+        200:
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
                 $ref: "#/components/schemas/Student"
+        404:
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+    patch:
+      tags:
+        - Students
+      operationId: updateStudentById
+      description: Update data on a specific student.
+      responses:
+        204:
+          description: No response available on patch requests
+        404:
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        400:
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
+    delete:
+      tags:
+        - Students
+      operationId: RemoveStudentById
+      description: Remove a specific student.
+      responses:
+        204:
+          description: Student removed. No response returned
+        404:
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        401:
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+  /students/{id}/grades:
+    get:
+      tags:
+        - Students
+        - Grades
+      operationId: getGradesForStudent
+      responses:
+        200:
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grade"
+              examples:
+                unlocked:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    schoolId: 3fa85f64-5717-4562-b3fc-2c963f66afaa
+                    grade: A
+                    subjectId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    type: course
+                    locked: false
+                    registeredAt: "2022-03-28T06:36:23.163Z"
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+    post:
+      tags:
+        - Students
+        - Grades
+      operationId: createGradeForStudent
+      description: Update data on a specific student.
+      requestBody:
+        $ref: "#/components/requestBodies/createGradeForStudent"
+      responses:
+        201:
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grade"
+              examples:
+                published:
+                  value:
+                    id: 2ad6d16a-07fc-4095-a9ce-82da1dca8378
+                    schoolId: 1275b48d-3d6a-4860-8747-ae32bdcfc575
+                    subjectId: 2966c356-ffaa-4c85-9844-0d7a27ea1485
+                    type: course
+                    grade: A
+                    locked: false
+                    registeredAt: "2022-03-28T06:36:23.163Z"
+                    registeredBy: 32eda3e8-abb4-41a6-88ed-754ec94afdd8
+                    published: true
+                    publishedAt: "2022-03-28T06:36:23.163Z"
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+        400:
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
 components:
+  requestBodies:
+    createGradeForStudent:
+      $ref: "./requests/createGradeForStudent.yaml"
   schemas:
+    BadRequest:
+      $ref: "./errors/400.yaml#/BadRequest"
+    NotFound:
+      $ref: "./errors/404.yaml#/NotFound"
+    Unauthorized:
+      $ref: "./errors/401.yaml#/Unauthorized"
     Student:
       $ref: "./entities/Student.yml#/Student"
     Teacher:
@@ -30,16 +168,12 @@ components:
     School:
       $ref: "./entities/School.yml#/School"
     Grade:
-      $ref: "./entities/Grade.yml#/Grade"
+      $ref: "./entities/Grade.yml"
     Subject:
       $ref: "./entities/Subject.yml#/Subject"
-    Case:
-      $ref: "./entities/Case.yml#/Case"
     Schedule:
       $ref: "./entities/Schedule.yml#/Schedule"
     Journal:
       $ref: "./entities/Journal.yml#/Journal"
     Admission:
       $ref: "./entities/Admission.yml#/Admission"
-    Report:
-      $ref: "./entities/Report.yml#/Report"

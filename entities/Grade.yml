@@ -1,8 +1,43 @@
-Grade:
-  type: object
-  properties:
-    id:
-      type: string
-    meta:
-      links:
-        $ref: "./Link.yml#/links"
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+  schoolId:
+    type: string
+    format: uuid
+  grade:
+    type: string
+  subjectId:
+    type: string
+    format: uuid
+  type:
+    type: string
+  locked:
+    type: boolean
+  registeredAt:
+    type: string
+    format: date-time
+  registeredBy:
+    type: string
+    format: uuid
+  gradingTeacherId:
+    type: string
+    format: uuid
+  published:
+    type: boolean
+  publishedAt:
+    type: string
+    format: date-time
+  modifiedAt:
+    type: string
+    format: date-time
+  modifiedBy:
+    type: string
+    format: uuid
+  createdAt:
+    type: string
+    format: date-time
+  meta:
+    links:
+      $ref: "./Link.yml#/links"
