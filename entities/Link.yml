@@ -1,12 +1,11 @@
-links:
-  type: array
-  items:
-    type: object
-    properties:
-      href:
-        type: string
-      rel:
-        type : string
-      method:
-        type: string
-        enum: ["GET", "POST", "PATCH", "DELETE"]
+type: array
+items:
+  type: object
+  properties:
+    href:
+      type: string
+    rel:
+      type : string
+    method:
+      type: string
+      enum: ["GET", "POST", "PATCH", "DELETE"]

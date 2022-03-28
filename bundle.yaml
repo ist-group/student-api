@@ -1,0 +1,1713 @@
+openapi: 3.0.2
+info:
+  title: IST REST Api
+  version: '1.0'
+paths:
+  /students:
+    get:
+      tags:
+        - Students
+      operationId: getStudents
+      responses:
+        '200':
+          description: Retrieve all existing students.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+                    email:
+                      type: string
+                      format: email
+                    meta:
+                      type: object
+                      properties:
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                              rel:
+                                type: string
+                              method:
+                                type: string
+                                enum:
+                                  - GET
+                                  - POST
+                                  - PATCH
+                                  - DELETE
+                    nationalId:
+                      type: string
+                      maxLength: 40
+                      example: 811218-9876
+                    nationalIdCategory:
+                      type: string
+                      maxLength: 36
+                      example: temporary_civic_number
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Doe
+                    gender:
+                      type: string
+                      enum:
+                        - FEMALE
+                        - MALE
+                        - UNKNOWN
+                      example: MALE
+                    dateOfBirth:
+                      type: string
+                      format: date
+                      example: '1981-12-17'
+                    dateOfDeath:
+                      type: string
+                      format: date
+                      example: null
+                    addresses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          street:
+                            type: string
+                            description: Street address e.g Mainstreet
+                          number:
+                            type: string
+                            description: House number e.g 1 or 1A
+                          city:
+                            type: string
+                          postcode:
+                            type: string
+                          country:
+                            type: string
+                          meta:
+                            type: object
+                            properties:
+                              links:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                                    rel:
+                                      type: string
+                                    method:
+                                      type: string
+                                      enum:
+                                        - GET
+                                        - POST
+                                        - PATCH
+                                        - DELETE
+                    contactDetails:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20170203'
+                          endDate:
+                            type: string
+                            format: date
+                            example: null
+                          primary:
+                            type: boolean
+                            example: true
+                          type:
+                            example: MOBILE
+                            type: string
+                            enum:
+                              - EMAIL
+                              - PHONE
+                              - MOBILE
+                              - OTHER
+                          contactDetails:
+                            example: '''070 11 11 111'' if type is mobile or ''kenny.nilsson@mail.com'' if type is e-mail.'
+                            type: string
+                    relations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+                          personId:
+                            type: string
+                            example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+                          type:
+                            description: 'The relation type refers to what personId is to this person. For example if related person is child of this person, relation type value will be `CHILD`.'
+                            type: string
+                            enum:
+                              - GUARDIAN
+                              - WARD
+                              - PARENT
+                              - CHILD
+                              - FOSTER_PARENT
+                              - FOSTER_CHILD
+                              - CONTACT
+                              - SPOUSE
+                              - COHABITER
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180101'
+                          endDate:
+                            type: string
+                            format: date
+                    idHistory:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+                          idType:
+                            type: string
+                            enum:
+                              - NATIONAL_ID
+                              - PERSON_ID
+                              - SECONDARY_ID
+                            example: NATIONAL_ID
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180202'
+                          endDate:
+                            type: string
+                            format: date
+                            example: '20180510'
+                    official:
+                      type: boolean
+                      example: true
+                    relocated:
+                      type: string
+                      format: date
+                      example: '2018-01-01'
+                    secondaryId:
+                      description: |
+                        Secondary identifier where it is possible to keep an id for a person that can be used
+                        as a human readable reference to a person when civic numbers are inappropriate because they are
+                        considered to be personal identifiable information.
+                      type: string
+                      example: '123124'
+                    protectedIdentity:
+                      type: boolean
+                      example: false
+                    created:
+                      type: string
+                      format: date-time
+                      example: 2017-07-07T22:11:11.333Z
+                    modified:
+                      type: string
+                      format: date-time
+                      example: '2019-08-06T22:11:11.333Z'
+    post:
+      tags:
+        - Students
+      operationId: createStudent
+      requestBody:
+        description: Create a new student
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - nationalId
+                - nationalIdCategory
+                - firstName
+                - lastName
+                - gender
+                - dateOfBirth
+                - dateOfDeath
+              properties:
+                email:
+                  type: string
+                  format: email
+                nationalId:
+                  type: string
+                nationalIdCategory:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                gender:
+                  type: string
+                  enum:
+                    - FEMALE
+                    - MALE
+                    - UNKNOWN
+                dateOfBirth:
+                  type: string
+                  format: date
+                  example: '1981-12-17'
+                dateOfDeath:
+                  type: string
+                  format: date
+                  example: null
+      responses:
+        '201':
+          description: Create new student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+                    email:
+                      type: string
+                      format: email
+                    meta:
+                      type: object
+                      properties:
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                              rel:
+                                type: string
+                              method:
+                                type: string
+                                enum:
+                                  - GET
+                                  - POST
+                                  - PATCH
+                                  - DELETE
+                    nationalId:
+                      type: string
+                      maxLength: 40
+                      example: 811218-9876
+                    nationalIdCategory:
+                      type: string
+                      maxLength: 36
+                      example: temporary_civic_number
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Doe
+                    gender:
+                      type: string
+                      enum:
+                        - FEMALE
+                        - MALE
+                        - UNKNOWN
+                      example: MALE
+                    dateOfBirth:
+                      type: string
+                      format: date
+                      example: '1981-12-17'
+                    dateOfDeath:
+                      type: string
+                      format: date
+                      example: null
+                    addresses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          street:
+                            type: string
+                            description: Street address e.g Mainstreet
+                          number:
+                            type: string
+                            description: House number e.g 1 or 1A
+                          city:
+                            type: string
+                          postcode:
+                            type: string
+                          country:
+                            type: string
+                          meta:
+                            type: object
+                            properties:
+                              links:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                                    rel:
+                                      type: string
+                                    method:
+                                      type: string
+                                      enum:
+                                        - GET
+                                        - POST
+                                        - PATCH
+                                        - DELETE
+                    contactDetails:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20170203'
+                          endDate:
+                            type: string
+                            format: date
+                            example: null
+                          primary:
+                            type: boolean
+                            example: true
+                          type:
+                            example: MOBILE
+                            type: string
+                            enum:
+                              - EMAIL
+                              - PHONE
+                              - MOBILE
+                              - OTHER
+                          contactDetails:
+                            example: '''070 11 11 111'' if type is mobile or ''kenny.nilsson@mail.com'' if type is e-mail.'
+                            type: string
+                    relations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+                          personId:
+                            type: string
+                            example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+                          type:
+                            description: 'The relation type refers to what personId is to this person. For example if related person is child of this person, relation type value will be `CHILD`.'
+                            type: string
+                            enum:
+                              - GUARDIAN
+                              - WARD
+                              - PARENT
+                              - CHILD
+                              - FOSTER_PARENT
+                              - FOSTER_CHILD
+                              - CONTACT
+                              - SPOUSE
+                              - COHABITER
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180101'
+                          endDate:
+                            type: string
+                            format: date
+                    idHistory:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+                          idType:
+                            type: string
+                            enum:
+                              - NATIONAL_ID
+                              - PERSON_ID
+                              - SECONDARY_ID
+                            example: NATIONAL_ID
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180202'
+                          endDate:
+                            type: string
+                            format: date
+                            example: '20180510'
+                    official:
+                      type: boolean
+                      example: true
+                    relocated:
+                      type: string
+                      format: date
+                      example: '2018-01-01'
+                    secondaryId:
+                      description: |
+                        Secondary identifier where it is possible to keep an id for a person that can be used
+                        as a human readable reference to a person when civic numbers are inappropriate because they are
+                        considered to be personal identifiable information.
+                      type: string
+                      example: '123124'
+                    protectedIdentity:
+                      type: boolean
+                      example: false
+                    created:
+                      type: string
+                      format: date-time
+                      example: 2017-07-07T22:11:11.333Z
+                    modified:
+                      type: string
+                      format: date-time
+                      example: '2019-08-06T22:11:11.333Z'
+  '/students/{id}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+      operationId: getStudentById
+      responses:
+        '200':
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+                  email:
+                    type: string
+                    format: email
+                  meta:
+                    type: object
+                    properties:
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                            rel:
+                              type: string
+                            method:
+                              type: string
+                              enum:
+                                - GET
+                                - POST
+                                - PATCH
+                                - DELETE
+                  nationalId:
+                    type: string
+                    maxLength: 40
+                    example: 811218-9876
+                  nationalIdCategory:
+                    type: string
+                    maxLength: 36
+                    example: temporary_civic_number
+                  firstName:
+                    type: string
+                    example: John
+                  lastName:
+                    type: string
+                    example: Doe
+                  gender:
+                    type: string
+                    enum:
+                      - FEMALE
+                      - MALE
+                      - UNKNOWN
+                    example: MALE
+                  dateOfBirth:
+                    type: string
+                    format: date
+                    example: '1981-12-17'
+                  dateOfDeath:
+                    type: string
+                    format: date
+                    example: null
+                  addresses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        street:
+                          type: string
+                          description: Street address e.g Mainstreet
+                        number:
+                          type: string
+                          description: House number e.g 1 or 1A
+                        city:
+                          type: string
+                        postcode:
+                          type: string
+                        country:
+                          type: string
+                        meta:
+                          type: object
+                          properties:
+                            links:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  href:
+                                    type: string
+                                  rel:
+                                    type: string
+                                  method:
+                                    type: string
+                                    enum:
+                                      - GET
+                                      - POST
+                                      - PATCH
+                                      - DELETE
+                  contactDetails:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+                        startDate:
+                          type: string
+                          format: date
+                          example: '20170203'
+                        endDate:
+                          type: string
+                          format: date
+                          example: null
+                        primary:
+                          type: boolean
+                          example: true
+                        type:
+                          example: MOBILE
+                          type: string
+                          enum:
+                            - EMAIL
+                            - PHONE
+                            - MOBILE
+                            - OTHER
+                        contactDetails:
+                          example: '''070 11 11 111'' if type is mobile or ''kenny.nilsson@mail.com'' if type is e-mail.'
+                          type: string
+                  relations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+                        personId:
+                          type: string
+                          example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+                        type:
+                          description: 'The relation type refers to what personId is to this person. For example if related person is child of this person, relation type value will be `CHILD`.'
+                          type: string
+                          enum:
+                            - GUARDIAN
+                            - WARD
+                            - PARENT
+                            - CHILD
+                            - FOSTER_PARENT
+                            - FOSTER_CHILD
+                            - CONTACT
+                            - SPOUSE
+                            - COHABITER
+                        startDate:
+                          type: string
+                          format: date
+                          example: '20180101'
+                        endDate:
+                          type: string
+                          format: date
+                  idHistory:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+                        idType:
+                          type: string
+                          enum:
+                            - NATIONAL_ID
+                            - PERSON_ID
+                            - SECONDARY_ID
+                          example: NATIONAL_ID
+                        startDate:
+                          type: string
+                          format: date
+                          example: '20180202'
+                        endDate:
+                          type: string
+                          format: date
+                          example: '20180510'
+                  official:
+                    type: boolean
+                    example: true
+                  relocated:
+                    type: string
+                    format: date
+                    example: '2018-01-01'
+                  secondaryId:
+                    description: |
+                      Secondary identifier where it is possible to keep an id for a person that can be used
+                      as a human readable reference to a person when civic numbers are inappropriate because they are
+                      considered to be personal identifiable information.
+                    type: string
+                    example: '123124'
+                  protectedIdentity:
+                    type: boolean
+                    example: false
+                  created:
+                    type: string
+                    format: date-time
+                    example: 2017-07-07T22:11:11.333Z
+                  modified:
+                    type: string
+                    format: date-time
+                    example: '2019-08-06T22:11:11.333Z'
+        '404':
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    patch:
+      tags:
+        - Students
+      operationId: updateStudentById
+      description: Update data on a specific student.
+      responses:
+        '204':
+          description: No response available on patch requests
+        '400':
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+        '404':
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    delete:
+      tags:
+        - Students
+      operationId: RemoveStudentById
+      description: Remove a specific student.
+      responses:
+        '204':
+          description: Student removed. No response returned
+        '401':
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+        '404':
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+  '/students/{id}/grades':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Grades
+      operationId: getGradesForStudent
+      responses:
+        '200':
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  schoolId:
+                    type: string
+                    format: uuid
+                  grade:
+                    type: string
+                  subjectId:
+                    type: string
+                    format: uuid
+                  type:
+                    type: string
+                  locked:
+                    type: boolean
+                  registeredAt:
+                    type: string
+                    format: date-time
+                  registeredBy:
+                    type: string
+                    format: uuid
+                  gradingTeacherId:
+                    type: string
+                    format: uuid
+                  published:
+                    type: boolean
+                  publishedAt:
+                    type: string
+                    format: date-time
+                  modifiedAt:
+                    type: string
+                    format: date-time
+                  modifiedBy:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  meta:
+                    type: object
+                    properties:
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                            rel:
+                              type: string
+                            method:
+                              type: string
+                              enum:
+                                - GET
+                                - POST
+                                - PATCH
+                                - DELETE
+              examples:
+                unlocked:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    schoolId: 3fa85f64-5717-4562-b3fc-2c963f66afaa
+                    grade: A
+                    subjectId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    type: course
+                    locked: false
+                    registeredAt: '2022-03-28T06:36:23.163Z'
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+    post:
+      tags:
+        - Students
+        - Grades
+      operationId: createGradeForStudent
+      description: Update data on a specific student.
+      requestBody:
+        description: Create a a new grade for a student. Locked defaults to false
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - schoolId
+                - grade
+                - type
+                - subjectId
+                - gradingTeacherId
+                - registeredAt
+              properties:
+                schoolId:
+                  type: string
+                  format: uuid
+                grade:
+                  type: string
+                subjectId:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                locked:
+                  type: boolean
+                registeredAt:
+                  type: string
+                  format: date-time
+                gradingTeacherId:
+                  type: string
+                  format: uuid
+      responses:
+        '201':
+          description: Retrieve a specific student.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  schoolId:
+                    type: string
+                    format: uuid
+                  grade:
+                    type: string
+                  subjectId:
+                    type: string
+                    format: uuid
+                  type:
+                    type: string
+                  locked:
+                    type: boolean
+                  registeredAt:
+                    type: string
+                    format: date-time
+                  registeredBy:
+                    type: string
+                    format: uuid
+                  gradingTeacherId:
+                    type: string
+                    format: uuid
+                  published:
+                    type: boolean
+                  publishedAt:
+                    type: string
+                    format: date-time
+                  modifiedAt:
+                    type: string
+                    format: date-time
+                  modifiedBy:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  meta:
+                    type: object
+                    properties:
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                            rel:
+                              type: string
+                            method:
+                              type: string
+                              enum:
+                                - GET
+                                - POST
+                                - PATCH
+                                - DELETE
+              examples:
+                published:
+                  value:
+                    id: 2ad6d16a-07fc-4095-a9ce-82da1dca8378
+                    schoolId: 1275b48d-3d6a-4860-8747-ae32bdcfc575
+                    subjectId: 2966c356-ffaa-4c85-9844-0d7a27ea1485
+                    type: course
+                    grade: A
+                    locked: false
+                    registeredAt: '2022-03-28T06:36:23.163Z'
+                    registeredBy: 32eda3e8-abb4-41a6-88ed-754ec94afdd8
+                    published: true
+                    publishedAt: '2022-03-28T06:36:23.163Z'
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+        '400':
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+components:
+  requestBodies:
+    createGradeForStudent:
+      description: Create a a new grade for a student. Locked defaults to false
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - schoolId
+              - grade
+              - type
+              - subjectId
+              - gradingTeacherId
+              - registeredAt
+            properties:
+              schoolId:
+                type: string
+                format: uuid
+              grade:
+                type: string
+              subjectId:
+                type: string
+                format: uuid
+              type:
+                type: string
+              locked:
+                type: boolean
+              registeredAt:
+                type: string
+                format: date-time
+              gradingTeacherId:
+                type: string
+                format: uuid
+    createStudent:
+      description: Create a new student
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - nationalId
+              - nationalIdCategory
+              - firstName
+              - lastName
+              - gender
+              - dateOfBirth
+              - dateOfDeath
+            properties:
+              email:
+                type: string
+                format: email
+              nationalId:
+                type: string
+              nationalIdCategory:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              gender:
+                type: string
+                enum:
+                  - FEMALE
+                  - MALE
+                  - UNKNOWN
+              dateOfBirth:
+                type: string
+                format: date
+                example: '1981-12-17'
+              dateOfDeath:
+                type: string
+                format: date
+                example: null
+  schemas:
+    BadRequest:
+      type: object
+      properties:
+        trace:
+          type: string
+          description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+          format: 'uuid,'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+              message:
+                type: string
+                description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    NotFound:
+      type: object
+      properties:
+        trace:
+          type: string
+          description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+          format: 'uuid,'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+              message:
+                type: string
+                description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    Unauthorized:
+      type: object
+      properties:
+        trace:
+          type: string
+          description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+          format: 'uuid,'
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: string
+                description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+              message:
+                type: string
+                description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    Student:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+        email:
+          type: string
+          format: email
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+        nationalId:
+          type: string
+          maxLength: 40
+          example: 811218-9876
+        nationalIdCategory:
+          type: string
+          maxLength: 36
+          example: temporary_civic_number
+        firstName:
+          type: string
+          example: John
+        lastName:
+          type: string
+          example: Doe
+        gender:
+          type: string
+          enum:
+            - FEMALE
+            - MALE
+            - UNKNOWN
+          example: MALE
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1981-12-17'
+        dateOfDeath:
+          type: string
+          format: date
+          example: null
+        addresses:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              street:
+                type: string
+                description: Street address e.g Mainstreet
+              number:
+                type: string
+                description: House number e.g 1 or 1A
+              city:
+                type: string
+              postcode:
+                type: string
+              country:
+                type: string
+              meta:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        href:
+                          type: string
+                        rel:
+                          type: string
+                        method:
+                          type: string
+                          enum:
+                            - GET
+                            - POST
+                            - PATCH
+                            - DELETE
+        contactDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+              startDate:
+                type: string
+                format: date
+                example: '20170203'
+              endDate:
+                type: string
+                format: date
+                example: null
+              primary:
+                type: boolean
+                example: true
+              type:
+                example: MOBILE
+                type: string
+                enum:
+                  - EMAIL
+                  - PHONE
+                  - MOBILE
+                  - OTHER
+              contactDetails:
+                example: '''070 11 11 111'' if type is mobile or ''kenny.nilsson@mail.com'' if type is e-mail.'
+                type: string
+        relations:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+              personId:
+                type: string
+                example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+              type:
+                description: 'The relation type refers to what personId is to this person. For example if related person is child of this person, relation type value will be `CHILD`.'
+                type: string
+                enum:
+                  - GUARDIAN
+                  - WARD
+                  - PARENT
+                  - CHILD
+                  - FOSTER_PARENT
+                  - FOSTER_CHILD
+                  - CONTACT
+                  - SPOUSE
+                  - COHABITER
+              startDate:
+                type: string
+                format: date
+                example: '20180101'
+              endDate:
+                type: string
+                format: date
+        idHistory:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+              idType:
+                type: string
+                enum:
+                  - NATIONAL_ID
+                  - PERSON_ID
+                  - SECONDARY_ID
+                example: NATIONAL_ID
+              startDate:
+                type: string
+                format: date
+                example: '20180202'
+              endDate:
+                type: string
+                format: date
+                example: '20180510'
+        official:
+          type: boolean
+          example: true
+        relocated:
+          type: string
+          format: date
+          example: '2018-01-01'
+        secondaryId:
+          description: |
+            Secondary identifier where it is possible to keep an id for a person that can be used
+            as a human readable reference to a person when civic numbers are inappropriate because they are
+            considered to be personal identifiable information.
+          type: string
+          example: '123124'
+        protectedIdentity:
+          type: boolean
+          example: false
+        created:
+          type: string
+          format: date-time
+          example: 2017-07-07T22:11:11.333Z
+        modified:
+          type: string
+          format: date-time
+          example: '2019-08-06T22:11:11.333Z'
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Guardian:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Address:
+      type: object
+      properties:
+        id:
+          type: string
+        street:
+          type: string
+          description: Street address e.g Mainstreet
+        number:
+          type: string
+          description: House number e.g 1 or 1A
+        city:
+          type: string
+        postcode:
+          type: string
+        country:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    School:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Grade:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        schoolId:
+          type: string
+          format: uuid
+        grade:
+          type: string
+        subjectId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        locked:
+          type: boolean
+        registeredAt:
+          type: string
+          format: date-time
+        registeredBy:
+          type: string
+          format: uuid
+        gradingTeacherId:
+          type: string
+          format: uuid
+        published:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+        modifiedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Subject:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Schedule:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Journal:
+      type: object
+      properties:
+        id:
+          type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
+    Admission:
+      type: object
+      properties:
+        id:
+          type: string
+        schoolId:
+          type: string
+          format: uuid
+        start_at:
+          type: string
+          format: date
+        end_at:
+          type: string
+          format: date
+        childId:
+          type: string
+          format: uuid
+        guardians:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              first_name:
+                type: string
+              last_name:
+                type: string
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE

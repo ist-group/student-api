@@ -1,11 +1,157 @@
-Student:
-  type: object
-  properties:
-    id:
-      type: string
-    email:
-      type: string
-      format: email
-    meta:
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+  email:
+    type: string
+    format: email
+  meta:
+    type: object
+    properties:
       links:
-        $ref: "./Link.yml#/links"
+        $ref: "./Link.yml"
+  nationalId:
+    type: string
+    maxLength: 40
+    example: 811218-9876
+  nationalIdCategory:
+    type: string
+    maxLength: 36
+    example: "temporary_civic_number"
+  firstName:
+    type: string
+    example: John
+  lastName:
+    type: string
+    example: Doe
+  gender:
+    type: string
+    enum:
+      - FEMALE
+      - MALE
+      - UNKNOWN
+    example: MALE
+  dateOfBirth:
+    type: string
+    format: date
+    example: "1981-12-17"
+  dateOfDeath:
+    type: string
+    format: date
+    example: null
+  addresses:
+    type: array
+    items:
+      $ref: "./Address.yml"
+  contactDetails:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+        startDate:
+          type: string
+          format: date
+          example: "20170203"
+        endDate:
+          type: string
+          format: date
+          example: null
+        primary:
+          type: boolean
+          example: true
+        type:
+          example: MOBILE
+          type: string
+          enum:
+            - EMAIL
+            - PHONE
+            - MOBILE
+            - OTHER
+        contactDetails:
+          example: "'070 11 11 111' if type is mobile or 'kenny.nilsson@mail.com' if type is e-mail."
+          type: string
+  relations:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+        personId:
+          type: string
+          example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+        type:
+          description: The relation type refers to what personId is to this person.
+            For example if related person is child of this person, relation type value will be `CHILD`.
+          type: string
+          enum:
+            - GUARDIAN
+            - WARD
+            - PARENT
+            - CHILD
+            - FOSTER_PARENT
+            - FOSTER_CHILD
+            - CONTACT
+            - SPOUSE
+            - COHABITER
+        startDate:
+          type: string
+          format: date
+          example: "20180101"
+        endDate:
+          type: string
+          format: date
+  idHistory:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+        idType:
+          type: string
+          enum:
+            - NATIONAL_ID
+            - PERSON_ID
+            - SECONDARY_ID
+          example: "NATIONAL_ID"
+        startDate:
+          type: string
+          format: date
+          example: "20180202"
+        endDate:
+          type: string
+          format: date
+          example: "20180510"
+  official:
+    type: boolean
+    example: true
+  relocated:
+    type: string
+    format: date
+    example: "2018-01-01"
+  secondaryId:
+    description: |
+      Secondary identifier where it is possible to keep an id for a person that can be used
+      as a human readable reference to a person when civic numbers are inappropriate because they are
+      considered to be personal identifiable information.
+    type: string
+    example: "123124"
+  protectedIdentity:
+    type: boolean
+    example: false
+  created:
+    type: string
+    format: date-time
+    example: 2017-07-07T22:11:11.333Z
+  modified:
+    type: string
+    format: date-time
+    example: "2019-08-06T22:11:11.333Z"

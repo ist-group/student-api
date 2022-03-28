@@ -18,13 +18,17 @@ Admission:
     guardians:
       type: array
       items:
-        id:
-          type: string
-          format: uuid
-        first_name:
-          type: string
-        last_name:
-          type: string
+        type: object
+        properties:
+          id:
+            type: string
+            format: uuid
+          first_name:
+            type: string
+          last_name:
+            type: string
     meta:
-      links:
-        $ref: "./Link.yml#/links"
+      type: object
+      properties:
+        links:
+          $ref: "./Link.yml"

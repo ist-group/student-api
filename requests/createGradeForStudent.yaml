@@ -3,6 +3,13 @@ content:
   application/json:
     schema:
       type: object
+      required:
+      - schoolId
+      - grade
+      - type
+      - subjectId
+      - gradingTeacherId
+      - registeredAt
       properties:
         schoolId:
           type: string
@@ -22,10 +29,3 @@ content:
         gradingTeacherId:
           type: string
           format: uuid
-required:
-  - schoolId
-  - grade
-  - type
-  - subjectId
-  - gradingTeacherId
-  - registeredAt

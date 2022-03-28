@@ -7,5 +7,7 @@ Teacher:
       type: string
       format: email
     meta:
-      links:
-        $ref: "./Link.yml#/links"
+      type: object
+      properties:
+        links:
+          $ref: "./Link.yml"

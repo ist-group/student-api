@@ -1,20 +1,21 @@
-Address:
-  type: object
-  properties:
-    id:
-      type: string
-    street:
-      type: string
-      description: Street address e.g Mainstreet
-    number:
-      type: string
-      description: House number e.g 1 or 1A
-    city:
-      type: string
-    postcode:
-      type: string
-    country:
-      type: string
-    meta:
+type: object
+properties:
+  id:
+    type: string
+  street:
+    type: string
+    description: Street address e.g Mainstreet
+  number:
+    type: string
+    description: House number e.g 1 or 1A
+  city:
+    type: string
+  postcode:
+    type: string
+  country:
+    type: string
+  meta:
+    type: object
+    properties:
       links:
-        $ref: "./Link.yml#/links"
+        $ref: "./Link.yml"

@@ -4,5 +4,7 @@ School:
     id:
       type: string
     meta:
-      links:
-        $ref: "./Link.yml#/links"
+      type: object
+      properties:
+        links:
+          $ref: "./Link.yml"

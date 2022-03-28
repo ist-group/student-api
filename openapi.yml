@@ -17,7 +17,28 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Student"
+    post:
+      tags:
+        - Students
+      operationId: createStudent
+      requestBody:
+        $ref: "#/components/requestBodies/createStudent"
+      responses:
+        201:
+          description: Create new student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
   /students/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - Students
@@ -76,6 +97,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
   /students/{id}/grades:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
     get:
       tags:
         - Students
@@ -148,6 +175,8 @@ components:
   requestBodies:
     createGradeForStudent:
       $ref: "./requests/createGradeForStudent.yaml"
+    createStudent:
+      $ref: "./requests/createStudent.yaml"
   schemas:
     BadRequest:
       $ref: "./errors/400.yaml#/BadRequest"
@@ -156,13 +185,13 @@ components:
     Unauthorized:
       $ref: "./errors/401.yaml#/Unauthorized"
     Student:
-      $ref: "./entities/Student.yml#/Student"
+      $ref: "./entities/Student.yml"
     Teacher:
       $ref: "./entities/Teacher.yml#/Teacher"
     Guardian:
       $ref: "./entities/Guardian.yml#/Guardian"
     Address:
-      $ref: "./entities/Address.yml#/Address"
+      $ref: "./entities/Address.yml"
     Role:
       $ref: "./entities/Role.yml#/Role"
     School:
