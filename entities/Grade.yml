@@ -3,6 +3,9 @@ properties:
   id:
     type: string
     format: uuid
+  studentId:
+    type: string
+    format: uuid
   schoolId:
     type: string
     format: uuid

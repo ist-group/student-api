@@ -1,0 +1,21 @@
+type: object
+description: Information about absence
+properties:
+  reason:
+    type: string
+    description: unique name of the reason of absence that can be fetched from absence-api
+    example: 'Sick'
+  text:
+    type: string
+    description: description of the absence
+    example: 'reported by parents'
+  startDateTime:
+    type: string
+    format: date-time
+    description: Date and Time for the Start of the absence in UTC, ISO format
+    example: '2018-09-15T08:15:00Z'
+  endDateTime:
+    type: string
+    format: date-time
+    description: Date and Time for the End of the absence in UTC, ISO format
+    example: '2018-09-15T08:30:00Z'

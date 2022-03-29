@@ -1,6 +1,7 @@
 openapi: 3.0.2
 info:
-  title: IST REST Api
+  title: IST Student API
+  description: High level Student API.
   version: "1.0"
 paths:
   /students:
@@ -96,6 +97,41 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+  /students/{id}/absences:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+        - Students
+        - Absences
+      operationId: getAbsencesForStudent
+      responses:
+        200:
+          description: Retrieve absences for a specific student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Absence"
+    post:
+      tags:
+        - Students
+        - Absences
+      operationId: createAbsenceForStudent
+      requestBody:
+        $ref: "#/components/requestBodies/createAbsenceForStudent"
+      responses:
+        201:
+          description: Get the newly created absences.
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Absence"
   /students/{id}/grades:
     parameters:
     - name: id
@@ -110,7 +146,7 @@ paths:
       operationId: getGradesForStudent
       responses:
         200:
-          description: Retrieve a specific student.
+          description: Retrieve grades for a specific student.
           content:
             application/json:
               schema:
@@ -175,6 +211,8 @@ components:
   requestBodies:
     createGradeForStudent:
       $ref: "./requests/createGradeForStudent.yaml"
+    createAbsenceForStudent:
+      $ref: "./requests/createAbsenceForStudent.yaml"
     createStudent:
       $ref: "./requests/createStudent.yaml"
   schemas:
@@ -184,25 +222,27 @@ components:
       $ref: "./errors/404.yaml#/NotFound"
     Unauthorized:
       $ref: "./errors/401.yaml#/Unauthorized"
-    Student:
-      $ref: "./entities/Student.yml"
-    Teacher:
-      $ref: "./entities/Teacher.yml#/Teacher"
-    Guardian:
-      $ref: "./entities/Guardian.yml#/Guardian"
-    Address:
-      $ref: "./entities/Address.yml"
-    Role:
-      $ref: "./entities/Role.yml#/Role"
-    School:
-      $ref: "./entities/School.yml#/School"
+    Absence:
+      $ref: "./entities/Absence.yml"
     Grade:
       $ref: "./entities/Grade.yml"
-    Subject:
-      $ref: "./entities/Subject.yml#/Subject"
-    Schedule:
-      $ref: "./entities/Schedule.yml#/Schedule"
-    Journal:
-      $ref: "./entities/Journal.yml#/Journal"
-    Admission:
-      $ref: "./entities/Admission.yml#/Admission"
+    Student:
+      $ref: "./entities/Student.yml"
+    # Teacher:
+    #   $ref: "./entities/Teacher.yml#/Teacher"
+    # Guardian:
+    #   $ref: "./entities/Guardian.yml#/Guardian"
+    # Address:
+    #   $ref: "./entities/Address.yml"
+    # Role:
+    #   $ref: "./entities/Role.yml#/Role"
+    # School:
+    #   $ref: "./entities/School.yml"
+    # Subject:
+    #   $ref: "./entities/Subject.yml#/Subject"
+    # Schedule:
+    #   $ref: "./entities/Schedule.yml#/Schedule"
+    # Journal:
+    #   $ref: "./entities/Journal.yml#/Journal"
+    # Admission:
+    #   $ref: "./entities/Admission.yml#/Admission"

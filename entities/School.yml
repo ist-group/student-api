@@ -1,10 +1,72 @@
-School:
-  type: object
-  properties:
-    id:
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    description: >
+        This is the unique internal identifier of the school. **NOTE**: This may be
+        forced to be string representation of UUID in the future, but it is not guaranteed to be UUID!!!
+    example: 'a9432236-1c94-4880-800b-00d092eef9a6'
+    schoolCode:
       type: string
-    meta:
-      type: object
-      properties:
-        links:
-          $ref: "./Link.yml"
+      description: >-
+        External identifier of the school, usually government issued. E.g.
+        `Skolenhetskod` in Sweden.
+      example: '86282718'
+    startDate:
+      description: >-
+        Date when this school unit was added or will be part of the
+        organisation. ISO format.
+      type: string
+      format: date
+      example: '2017-01-01'
+    endDate:
+      description: >-
+        Date when this school unit ceases to be part of the
+        organisation. ISO format.
+      type: string
+      format: date
+      example: '3117-01-01'
+    name:
+      type: string
+      description: Name of the school
+      example: Gustavslund
+    shortName:
+      type: string
+      description: An unique, abbreviated version of the name.
+      example: GLUND
+    organisationNumber:
+      description: External, usually government issued, identification number.
+      type: string
+      example: 212000-0662
+    ownerType:
+      type: string
+      description: Ownership type for the element or school. Most schools are either municipal or private, but there can be rare cases when school is state-owned (country) or community-owned (community).
+      enum:
+      - community
+      - country
+      - municipal
+      - private
+    ourReference:
+      type: string
+      description: >-
+        Our reference is the person working in our own organisation.
+        The content could have different formats, for example Name + phone number.
+      example: 'Kalle Karlsson, 0705-12 34 56'
+    yourReference:
+      type: string
+      description: >-
+        In this field you can specify a reference to the unit.
+        This can be used in integration files, for example, when paying to the unit.
+        Sometimes it's a name, sometimes a number, sometimes an alphanumeric code.
+      example: 'Eva Karlsson, 0706-78 90 12'
+    realEstateGroupCode:
+      type: string
+      description: >-
+        Code of the real estate group connected to the element, so it's possible to find out which geographic area a unit belongs to
+      example: '010311'
+  meta:
+    type: object
+    properties:
+      links:
+        $ref: "./Link.yml"

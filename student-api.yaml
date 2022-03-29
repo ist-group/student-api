@@ -1,6 +1,7 @@
 openapi: 3.0.2
 info:
-  title: IST REST Api
+  title: IST Student API
+  description: High level Student API.
   version: '1.0'
 paths:
   /students:
@@ -824,6 +825,109 @@ paths:
                         message:
                           type: string
                           description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+  '/students/{id}/absences':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Absences
+      operationId: getAbsencesForStudent
+      responses:
+        '200':
+          description: Retrieve absences for a specific student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  description: Information about absence
+                  properties:
+                    reason:
+                      type: string
+                      description: unique name of the reason of absence that can be fetched from absence-api
+                      example: Sick
+                    text:
+                      type: string
+                      description: description of the absence
+                      example: reported by parents
+                    startDateTime:
+                      type: string
+                      format: date-time
+                      description: 'Date and Time for the Start of the absence in UTC, ISO format'
+                      example: '2018-09-15T08:15:00Z'
+                    endDateTime:
+                      type: string
+                      format: date-time
+                      description: 'Date and Time for the End of the absence in UTC, ISO format'
+                      example: '2018-09-15T08:30:00Z'
+    post:
+      tags:
+        - Students
+        - Absences
+      operationId: createAbsenceForStudent
+      requestBody:
+        description: Create a a new absence for a student.
+        content:
+          application/json:
+            schema:
+              required:
+                - startDateTime
+                - endDateTime
+                - reason
+              type: object
+              description: Information about absence
+              properties:
+                reason:
+                  type: string
+                  description: unique name of the reason of absence that can be fetched from absence-api
+                  example: Sick
+                text:
+                  type: string
+                  description: description of the absence
+                  example: reported by parents
+                startDateTime:
+                  type: string
+                  format: date-time
+                  description: 'Date and Time for the Start of the absence in UTC, ISO format'
+                  example: '2018-09-15T08:15:00Z'
+                endDateTime:
+                  type: string
+                  format: date-time
+                  description: 'Date and Time for the End of the absence in UTC, ISO format'
+                  example: '2018-09-15T08:30:00Z'
+      responses:
+        '201':
+          description: Get the newly created absences.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Information about absence
+                properties:
+                  reason:
+                    type: string
+                    description: unique name of the reason of absence that can be fetched from absence-api
+                    example: Sick
+                  text:
+                    type: string
+                    description: description of the absence
+                    example: reported by parents
+                  startDateTime:
+                    type: string
+                    format: date-time
+                    description: 'Date and Time for the Start of the absence in UTC, ISO format'
+                    example: '2018-09-15T08:15:00Z'
+                  endDateTime:
+                    type: string
+                    format: date-time
+                    description: 'Date and Time for the End of the absence in UTC, ISO format'
+                    example: '2018-09-15T08:30:00Z'
   '/students/{id}/grades':
     parameters:
       - name: id
@@ -838,13 +942,16 @@ paths:
       operationId: getGradesForStudent
       responses:
         '200':
-          description: Retrieve a specific student.
+          description: Retrieve grades for a specific student.
           content:
             application/json:
               schema:
                 type: object
                 properties:
                   id:
+                    type: string
+                    format: uuid
+                  studentId:
                     type: string
                     format: uuid
                   schoolId:
@@ -964,6 +1071,9 @@ paths:
                 type: object
                 properties:
                   id:
+                    type: string
+                    format: uuid
+                  studentId:
                     type: string
                     format: uuid
                   schoolId:
@@ -1095,6 +1205,36 @@ components:
               gradingTeacherId:
                 type: string
                 format: uuid
+    createAbsenceForStudent:
+      description: Create a a new absence for a student.
+      content:
+        application/json:
+          schema:
+            required:
+              - startDateTime
+              - endDateTime
+              - reason
+            type: object
+            description: Information about absence
+            properties:
+              reason:
+                type: string
+                description: unique name of the reason of absence that can be fetched from absence-api
+                example: Sick
+              text:
+                type: string
+                description: description of the absence
+                example: reported by parents
+              startDateTime:
+                type: string
+                format: date-time
+                description: 'Date and Time for the Start of the absence in UTC, ISO format'
+                example: '2018-09-15T08:15:00Z'
+              endDateTime:
+                type: string
+                format: date-time
+                description: 'Date and Time for the End of the absence in UTC, ISO format'
+                example: '2018-09-15T08:30:00Z'
     createStudent:
       description: Create a new student
       content:
@@ -1191,6 +1331,91 @@ components:
               message:
                 type: string
                 description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    Absence:
+      type: object
+      description: Information about absence
+      properties:
+        reason:
+          type: string
+          description: unique name of the reason of absence that can be fetched from absence-api
+          example: Sick
+        text:
+          type: string
+          description: description of the absence
+          example: reported by parents
+        startDateTime:
+          type: string
+          format: date-time
+          description: 'Date and Time for the Start of the absence in UTC, ISO format'
+          example: '2018-09-15T08:15:00Z'
+        endDateTime:
+          type: string
+          format: date-time
+          description: 'Date and Time for the End of the absence in UTC, ISO format'
+          example: '2018-09-15T08:30:00Z'
+    Grade:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        studentId:
+          type: string
+          format: uuid
+        schoolId:
+          type: string
+          format: uuid
+        grade:
+          type: string
+        subjectId:
+          type: string
+          format: uuid
+        type:
+          type: string
+        locked:
+          type: boolean
+        registeredAt:
+          type: string
+          format: date-time
+        registeredBy:
+          type: string
+          format: uuid
+        gradingTeacherId:
+          type: string
+          format: uuid
+        published:
+          type: boolean
+        publishedAt:
+          type: string
+          format: date-time
+        modifiedAt:
+          type: string
+          format: date-time
+        modifiedBy:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        meta:
+          type: object
+          properties:
+            links:
+              type: array
+              items:
+                type: object
+                properties:
+                  href:
+                    type: string
+                  rel:
+                    type: string
+                  method:
+                    type: string
+                    enum:
+                      - GET
+                      - POST
+                      - PATCH
+                      - DELETE
     Student:
       type: object
       properties:
@@ -1396,318 +1621,3 @@ components:
           type: string
           format: date-time
           example: '2019-08-06T22:11:11.333Z'
-    Teacher:
-      type: object
-      properties:
-        id:
-          type: string
-        email:
-          type: string
-          format: email
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Guardian:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Address:
-      type: object
-      properties:
-        id:
-          type: string
-        street:
-          type: string
-          description: Street address e.g Mainstreet
-        number:
-          type: string
-          description: House number e.g 1 or 1A
-        city:
-          type: string
-        postcode:
-          type: string
-        country:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Role:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    School:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Grade:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        schoolId:
-          type: string
-          format: uuid
-        grade:
-          type: string
-        subjectId:
-          type: string
-          format: uuid
-        type:
-          type: string
-        locked:
-          type: boolean
-        registeredAt:
-          type: string
-          format: date-time
-        registeredBy:
-          type: string
-          format: uuid
-        gradingTeacherId:
-          type: string
-          format: uuid
-        published:
-          type: boolean
-        publishedAt:
-          type: string
-          format: date-time
-        modifiedAt:
-          type: string
-          format: date-time
-        modifiedBy:
-          type: string
-          format: uuid
-        createdAt:
-          type: string
-          format: date-time
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Subject:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Schedule:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Journal:
-      type: object
-      properties:
-        id:
-          type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
-    Admission:
-      type: object
-      properties:
-        id:
-          type: string
-        schoolId:
-          type: string
-          format: uuid
-        start_at:
-          type: string
-          format: date
-        end_at:
-          type: string
-          format: date
-        childId:
-          type: string
-          format: uuid
-        guardians:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-              first_name:
-                type: string
-              last_name:
-                type: string
-        meta:
-          type: object
-          properties:
-            links:
-              type: array
-              items:
-                type: object
-                properties:
-                  href:
-                    type: string
-                  rel:
-                    type: string
-                  method:
-                    type: string
-                    enum:
-                      - GET
-                      - POST
-                      - PATCH
-                      - DELETE
