@@ -1,0 +1,12 @@
+description: Create a a new absence for a student.
+content:
+  application/json:
+    schema:
+      $ref: "../entities/Enrolment.yml"
+      required:
+      - id
+      - personId
+      - startDate
+      - primary
+      - schoolId
+      - modified

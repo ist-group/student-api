@@ -1,0 +1,31 @@
+        description: Update existing student
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                nationalId:
+                  type: string
+                nationalIdCategory:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                gender:
+                  type: string
+                  enum:
+                    - FEMALE
+                    - MALE
+                    - UNKNOWN
+                dateOfBirth:
+                  type: string
+                  format: date
+                  example: "1981-12-17"
+                dateOfDeath:
+                  type: string
+                  format: date
+                  example: null

@@ -726,6 +726,38 @@ paths:
         - Students
       operationId: updateStudentById
       description: Update data on a specific student.
+      requestBody:
+        description: Update existing student
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                nationalId:
+                  type: string
+                nationalIdCategory:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                gender:
+                  type: string
+                  enum:
+                    - FEMALE
+                    - MALE
+                    - UNKNOWN
+                dateOfBirth:
+                  type: string
+                  format: date
+                  example: '1981-12-17'
+                dateOfDeath:
+                  type: string
+                  format: date
+                  example: null
       responses:
         '204':
           description: No response available on patch requests
@@ -928,6 +960,154 @@ paths:
                     format: date-time
                     description: 'Date and Time for the End of the absence in UTC, ISO format'
                     example: '2018-09-15T08:30:00Z'
+  '/students/{id}/absences/{absenceId}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: absenceId
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      tags:
+        - Students
+        - Absences
+      operationId: RemoveAbsenceById
+      description: Remove an absence for a student.
+      responses:
+        '204':
+          description: absence removed. No response returned
+        '401':
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+        '404':
+          description: Student or absence not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    patch:
+      tags:
+        - Students
+        - Absences
+      operationId: updateStudentAbsence
+      description: Update absence for a specific student.
+      requestBody:
+        description: Create a a new absence for a student.
+        content:
+          application/json:
+            schema:
+              required:
+                - startDateTime
+                - endDateTime
+                - reason
+              type: object
+              description: Information about absence
+              properties:
+                reason:
+                  type: string
+                  description: unique name of the reason of absence that can be fetched from absence-api
+                  example: Sick
+                text:
+                  type: string
+                  description: description of the absence
+                  example: reported by parents
+                startDateTime:
+                  type: string
+                  format: date-time
+                  description: 'Date and Time for the Start of the absence in UTC, ISO format'
+                  example: '2018-09-15T08:15:00Z'
+                endDateTime:
+                  type: string
+                  format: date-time
+                  description: 'Date and Time for the End of the absence in UTC, ISO format'
+                  example: '2018-09-15T08:30:00Z'
+      responses:
+        '204':
+          description: No response available on patch requests
+        '400':
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+        '404':
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
   '/students/{id}/grades':
     parameters:
       - name: id
@@ -1171,6 +1351,379 @@ paths:
                         message:
                           type: string
                           description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+  '/students/{id}/enrolments':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Enrolments
+      operationId: getEnrolmentsByStudentId
+      responses:
+        '200':
+          description: Retrieve a list of enrolments for a student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  description: An Enrolment is a Student that is being taught at a specific school Unit during a specific time period.
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Enrolment ID
+                      example: a9432236-1c94-4880-800b-00d092eef9a6
+                    startDate:
+                      type: string
+                      format: date
+                      description: Date when this enrolment starts. ISO format
+                      example: '2017-01-01'
+                    endDate:
+                      type: string
+                      format: date
+                      description: 'Date when this enrolment ends. May be null if the enrolment does not have grade level yet, so it is not possible to tell when they end their study.'
+                      example: '2117-01-01'
+                    primary:
+                      type: boolean
+                      description: |
+                        The School Unit, where the Student has its primary Enrolment, has the main responsibility of the Student during the period of the Enrolment.
+                        A Student can only have one active primary Enrolment within the same Education Level at a time. Education Level is set on the School Unit.
+                      default: false
+                      example: true
+                    schoolId:
+                      type: string
+                      description: 'uuid of unit, aka external id - reference to school unit in organisation.'
+                      example: '86282718'
+                    gradeLevel:
+                      type: string
+                      description: 'The Current grade level, e.g. ''F'' or ''8''. Not necessarily decided when enrolling. Not available for past and future enrolments.'
+                      example: '7'
+                    modifiedBy:
+                      type: string
+                      format: uuid
+                      description: The person that modified the enrolment last
+                      example: 20b3c146-2d35-404f-8327-258ed06a970e
+                    modifiedAt:
+                      type: string
+                      format: date-time
+                      description: Date when this enrolment was last modified.
+                      example: '2018-10-21T19:21:49.123Z'
+                    createdAt:
+                      type: string
+                      format: date-time
+                      description: Date when this enrolment was last modified.
+                      example: '2018-10-21T19:21:49.123Z'
+                    email:
+                      type: string
+                      description: Email address of current Enrolment.
+                      example: testemail@com.com
+        '404':
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+    post:
+      tags:
+        - Students
+        - Enrolments
+      operationId: createEnrolmentForAStudent
+      requestBody:
+        description: Create a a new absence for a student.
+        content:
+          application/json:
+            schema:
+              required:
+                - id
+                - personId
+                - startDate
+                - primary
+                - schoolId
+                - modified
+              description: An Enrolment is a Student that is being taught at a specific school Unit during a specific time period.
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: Enrolment ID
+                  example: a9432236-1c94-4880-800b-00d092eef9a6
+                startDate:
+                  type: string
+                  format: date
+                  description: Date when this enrolment starts. ISO format
+                  example: '2017-01-01'
+                endDate:
+                  type: string
+                  format: date
+                  description: 'Date when this enrolment ends. May be null if the enrolment does not have grade level yet, so it is not possible to tell when they end their study.'
+                  example: '2117-01-01'
+                primary:
+                  type: boolean
+                  description: |
+                    The School Unit, where the Student has its primary Enrolment, has the main responsibility of the Student during the period of the Enrolment.
+                    A Student can only have one active primary Enrolment within the same Education Level at a time. Education Level is set on the School Unit.
+                  default: false
+                  example: true
+                schoolId:
+                  type: string
+                  description: 'uuid of unit, aka external id - reference to school unit in organisation.'
+                  example: '86282718'
+                gradeLevel:
+                  type: string
+                  description: 'The Current grade level, e.g. ''F'' or ''8''. Not necessarily decided when enrolling. Not available for past and future enrolments.'
+                  example: '7'
+                modifiedBy:
+                  type: string
+                  format: uuid
+                  description: The person that modified the enrolment last
+                  example: 20b3c146-2d35-404f-8327-258ed06a970e
+                modifiedAt:
+                  type: string
+                  format: date-time
+                  description: Date when this enrolment was last modified.
+                  example: '2018-10-21T19:21:49.123Z'
+                createdAt:
+                  type: string
+                  format: date-time
+                  description: Date when this enrolment was last modified.
+                  example: '2018-10-21T19:21:49.123Z'
+                email:
+                  type: string
+                  description: Email address of current Enrolment.
+                  example: testemail@com.com
+      responses:
+        '201':
+          description: Create new student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      example: 9A0C26CA-3C49-4AA0-BC9C-6D2D7BB72A1A
+                    email:
+                      type: string
+                      format: email
+                    meta:
+                      type: object
+                      properties:
+                        links:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              href:
+                                type: string
+                              rel:
+                                type: string
+                              method:
+                                type: string
+                                enum:
+                                  - GET
+                                  - POST
+                                  - PATCH
+                                  - DELETE
+                    nationalId:
+                      type: string
+                      maxLength: 40
+                      example: 811218-9876
+                    nationalIdCategory:
+                      type: string
+                      maxLength: 36
+                      example: temporary_civic_number
+                    firstName:
+                      type: string
+                      example: John
+                    lastName:
+                      type: string
+                      example: Doe
+                    gender:
+                      type: string
+                      enum:
+                        - FEMALE
+                        - MALE
+                        - UNKNOWN
+                      example: MALE
+                    dateOfBirth:
+                      type: string
+                      format: date
+                      example: '1981-12-17'
+                    dateOfDeath:
+                      type: string
+                      format: date
+                      example: null
+                    addresses:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                          street:
+                            type: string
+                            description: Street address e.g Mainstreet
+                          number:
+                            type: string
+                            description: House number e.g 1 or 1A
+                          city:
+                            type: string
+                          postcode:
+                            type: string
+                          country:
+                            type: string
+                          meta:
+                            type: object
+                            properties:
+                              links:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    href:
+                                      type: string
+                                    rel:
+                                      type: string
+                                    method:
+                                      type: string
+                                      enum:
+                                        - GET
+                                        - POST
+                                        - PATCH
+                                        - DELETE
+                    contactDetails:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: EE327ADE-3EBC-42B6-978C-D29F19D20EFB
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20170203'
+                          endDate:
+                            type: string
+                            format: date
+                            example: null
+                          primary:
+                            type: boolean
+                            example: true
+                          type:
+                            example: MOBILE
+                            type: string
+                            enum:
+                              - EMAIL
+                              - PHONE
+                              - MOBILE
+                              - OTHER
+                          contactDetails:
+                            example: '''070 11 11 111'' if type is mobile or ''kenny.nilsson@mail.com'' if type is e-mail.'
+                            type: string
+                    relations:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 5BC363C8-5BC6-488F-B6D4-67B6D9D7A6EC
+                          personId:
+                            type: string
+                            example: A28CE8F5-8D1C-4C74-A7B3-DBF6E190820E
+                          type:
+                            description: 'The relation type refers to what personId is to this person. For example if related person is child of this person, relation type value will be `CHILD`.'
+                            type: string
+                            enum:
+                              - GUARDIAN
+                              - WARD
+                              - PARENT
+                              - CHILD
+                              - FOSTER_PARENT
+                              - FOSTER_CHILD
+                              - CONTACT
+                              - SPOUSE
+                              - COHABITER
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180101'
+                          endDate:
+                            type: string
+                            format: date
+                    idHistory:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            example: 43C0E812-7BB0-4121-B701-26BDEFD364F4
+                          idType:
+                            type: string
+                            enum:
+                              - NATIONAL_ID
+                              - PERSON_ID
+                              - SECONDARY_ID
+                            example: NATIONAL_ID
+                          startDate:
+                            type: string
+                            format: date
+                            example: '20180202'
+                          endDate:
+                            type: string
+                            format: date
+                            example: '20180510'
+                    official:
+                      type: boolean
+                      example: true
+                    relocated:
+                      type: string
+                      format: date
+                      example: '2018-01-01'
+                    secondaryId:
+                      description: |
+                        Secondary identifier where it is possible to keep an id for a person that can be used
+                        as a human readable reference to a person when civic numbers are inappropriate because they are
+                        considered to be personal identifiable information.
+                      type: string
+                      example: '123124'
+                    protectedIdentity:
+                      type: boolean
+                      example: false
+                    created:
+                      type: string
+                      format: date-time
+                      example: 2017-07-07T22:11:11.333Z
+                    modified:
+                      type: string
+                      format: date-time
+                      example: '2019-08-06T22:11:11.333Z'
 components:
   requestBodies:
     createGradeForStudent:
@@ -1250,6 +1803,101 @@ components:
               - gender
               - dateOfBirth
               - dateOfDeath
+            properties:
+              email:
+                type: string
+                format: email
+              nationalId:
+                type: string
+              nationalIdCategory:
+                type: string
+              firstName:
+                type: string
+              lastName:
+                type: string
+              gender:
+                type: string
+                enum:
+                  - FEMALE
+                  - MALE
+                  - UNKNOWN
+              dateOfBirth:
+                type: string
+                format: date
+                example: '1981-12-17'
+              dateOfDeath:
+                type: string
+                format: date
+                example: null
+    createEnrolment:
+      description: Create a a new absence for a student.
+      content:
+        application/json:
+          schema:
+            required:
+              - id
+              - personId
+              - startDate
+              - primary
+              - schoolId
+              - modified
+            description: An Enrolment is a Student that is being taught at a specific school Unit during a specific time period.
+            type: object
+            properties:
+              id:
+                type: string
+                description: Enrolment ID
+                example: a9432236-1c94-4880-800b-00d092eef9a6
+              startDate:
+                type: string
+                format: date
+                description: Date when this enrolment starts. ISO format
+                example: '2017-01-01'
+              endDate:
+                type: string
+                format: date
+                description: 'Date when this enrolment ends. May be null if the enrolment does not have grade level yet, so it is not possible to tell when they end their study.'
+                example: '2117-01-01'
+              primary:
+                type: boolean
+                description: |
+                  The School Unit, where the Student has its primary Enrolment, has the main responsibility of the Student during the period of the Enrolment.
+                  A Student can only have one active primary Enrolment within the same Education Level at a time. Education Level is set on the School Unit.
+                default: false
+                example: true
+              schoolId:
+                type: string
+                description: 'uuid of unit, aka external id - reference to school unit in organisation.'
+                example: '86282718'
+              gradeLevel:
+                type: string
+                description: 'The Current grade level, e.g. ''F'' or ''8''. Not necessarily decided when enrolling. Not available for past and future enrolments.'
+                example: '7'
+              modifiedBy:
+                type: string
+                format: uuid
+                description: The person that modified the enrolment last
+                example: 20b3c146-2d35-404f-8327-258ed06a970e
+              modifiedAt:
+                type: string
+                format: date-time
+                description: Date when this enrolment was last modified.
+                example: '2018-10-21T19:21:49.123Z'
+              createdAt:
+                type: string
+                format: date-time
+                description: Date when this enrolment was last modified.
+                example: '2018-10-21T19:21:49.123Z'
+              email:
+                type: string
+                description: Email address of current Enrolment.
+                example: testemail@com.com
+    updateStudent:
+      description: Update existing student
+      content:
+        application/json:
+          schema:
+            type: object
             properties:
               email:
                 type: string
@@ -1621,3 +2269,55 @@ components:
           type: string
           format: date-time
           example: '2019-08-06T22:11:11.333Z'
+    Enrolment:
+      description: An Enrolment is a Student that is being taught at a specific school Unit during a specific time period.
+      type: object
+      properties:
+        id:
+          type: string
+          description: Enrolment ID
+          example: a9432236-1c94-4880-800b-00d092eef9a6
+        startDate:
+          type: string
+          format: date
+          description: Date when this enrolment starts. ISO format
+          example: '2017-01-01'
+        endDate:
+          type: string
+          format: date
+          description: 'Date when this enrolment ends. May be null if the enrolment does not have grade level yet, so it is not possible to tell when they end their study.'
+          example: '2117-01-01'
+        primary:
+          type: boolean
+          description: |
+            The School Unit, where the Student has its primary Enrolment, has the main responsibility of the Student during the period of the Enrolment.
+            A Student can only have one active primary Enrolment within the same Education Level at a time. Education Level is set on the School Unit.
+          default: false
+          example: true
+        schoolId:
+          type: string
+          description: 'uuid of unit, aka external id - reference to school unit in organisation.'
+          example: '86282718'
+        gradeLevel:
+          type: string
+          description: 'The Current grade level, e.g. ''F'' or ''8''. Not necessarily decided when enrolling. Not available for past and future enrolments.'
+          example: '7'
+        modifiedBy:
+          type: string
+          format: uuid
+          description: The person that modified the enrolment last
+          example: 20b3c146-2d35-404f-8327-258ed06a970e
+        modifiedAt:
+          type: string
+          format: date-time
+          description: Date when this enrolment was last modified.
+          example: '2018-10-21T19:21:49.123Z'
+        createdAt:
+          type: string
+          format: date-time
+          description: Date when this enrolment was last modified.
+          example: '2018-10-21T19:21:49.123Z'
+        email:
+          type: string
+          description: Email address of current Enrolment.
+          example: testemail@com.com

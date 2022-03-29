@@ -62,6 +62,8 @@ paths:
         - Students
       operationId: updateStudentById
       description: Update data on a specific student.
+      requestBody:
+        $ref: "#/components/requestBodies/updateStudent"
       responses:
         204:
           description: No response available on patch requests
@@ -99,11 +101,11 @@ paths:
                 $ref: "#/components/schemas/Unauthorized"
   /students/{id}/absences:
     parameters:
-    - name: id
-      in: path
-      required: true
-      schema:
-        type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
     get:
       tags:
         - Students
@@ -132,6 +134,62 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Absence"
+  /students/{id}/absences/{absenceId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: absenceId
+        in: path
+        required: true
+        schema:
+          type: string
+    delete:
+      tags:
+        - Students
+        - Absences
+      operationId: RemoveAbsenceById
+      description: Remove an absence for a student.
+      responses:
+        204:
+          description: absence removed. No response returned
+        404:
+          description: Student or absence not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        401:
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+    patch:
+      tags:
+        - Students
+        - Absences
+      operationId: updateStudentAbsence
+      description: Update absence for a specific student.
+      requestBody:
+        $ref: "#/components/requestBodies/createAbsenceForStudent"
+      responses:
+        204:
+          description: No response available on patch requests
+        404:
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        400:
+          description: No response available on patch requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BadRequest"
   /students/{id}/grades:
     parameters:
     - name: id
@@ -207,14 +265,91 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+  /students/{id}/enrolments:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Enrolments
+      operationId: getEnrolmentsByStudentId
+      responses:
+        200:
+          description: Retrieve a list of enrolments for a student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Enrolment"
+        404:
+          description: Student with id could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+    post:
+      tags:
+        - Students
+        - Enrolments
+      operationId: createEnrolmentForAStudent
+      requestBody:
+        $ref: "#/components/requestBodies/createEnrolment"
+      responses:
+        201:
+          description: Create new student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Student"
+  /students/{id}/enrolments/{enrolmentId}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: enrolmentId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Enrolments
+      operationId: getEnrolmentByStudentId
+      responses:
+        200:
+          description: Retrieve enrolment for a student.
+          content:
+            application/json:
+              schema:
+                  $ref: "#/components/schemas/Enrolment"
+        404:
+          description: Enrolment could not be found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
 components:
   requestBodies:
     createGradeForStudent:
-      $ref: "./requests/createGradeForStudent.yaml"
+      $ref: "./requests/createGradeForStudent.yml"
     createAbsenceForStudent:
-      $ref: "./requests/createAbsenceForStudent.yaml"
+      $ref: "./requests/createAbsenceForStudent.yml"
     createStudent:
       $ref: "./requests/createStudent.yaml"
+    createEnrolment:
+      $ref: "./requests/createEnrolmentForStudent.yml"
+    updateStudent:
+      $ref: "./requests/updateStudent.yaml"
   schemas:
     BadRequest:
       $ref: "./errors/400.yaml#/BadRequest"
@@ -228,6 +363,8 @@ components:
       $ref: "./entities/Grade.yml"
     Student:
       $ref: "./entities/Student.yml"
+    Enrolment:
+      $ref: "./entities/Enrolment.yml"
     # Teacher:
     #   $ref: "./entities/Teacher.yml#/Teacher"
     # Guardian:
