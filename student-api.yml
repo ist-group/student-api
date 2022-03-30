@@ -1146,6 +1146,13 @@ paths:
                     type: string
                   locked:
                     type: boolean
+                  changeReason:
+                    type: string
+                    enum:
+                      - CHANGE
+                      - CLAIM
+                      - CORRECTION
+                      - TESTOUT
                   registeredAt:
                     type: string
                     format: date-time
@@ -1211,7 +1218,7 @@ paths:
       operationId: createGradeForStudent
       description: Update data on a specific student.
       requestBody:
-        description: Create a a new grade for a student. Locked defaults to false
+        description: Create a new grade for a student. Locked defaults to false
         content:
           application/json:
             schema:
@@ -1236,6 +1243,13 @@ paths:
                   type: string
                 locked:
                   type: boolean
+                changeReason:
+                  type: string
+                  enum:
+                    - CHANGE
+                    - CLAIM
+                    - CORRECTION
+                    - TESTOUT
                 registeredAt:
                   type: string
                   format: date-time
@@ -1268,6 +1282,13 @@ paths:
                     type: string
                   locked:
                     type: boolean
+                  changeReason:
+                    type: string
+                    enum:
+                      - CHANGE
+                      - CLAIM
+                      - CORRECTION
+                      - TESTOUT
                   registeredAt:
                     type: string
                     format: date-time
@@ -1351,6 +1372,156 @@ paths:
                         message:
                           type: string
                           description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
+  '/students/{id}/grades/{gradeId}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: gradeId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Grades
+      operationId: getGradeForStudent
+      responses:
+        '200':
+          description: Retrieve a grade for a student.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  studentId:
+                    type: string
+                    format: uuid
+                  schoolId:
+                    type: string
+                    format: uuid
+                  grade:
+                    type: string
+                  subjectId:
+                    type: string
+                    format: uuid
+                  type:
+                    type: string
+                  locked:
+                    type: boolean
+                  changeReason:
+                    type: string
+                    enum:
+                      - CHANGE
+                      - CLAIM
+                      - CORRECTION
+                      - TESTOUT
+                  registeredAt:
+                    type: string
+                    format: date-time
+                  registeredBy:
+                    type: string
+                    format: uuid
+                  gradingTeacherId:
+                    type: string
+                    format: uuid
+                  published:
+                    type: boolean
+                  publishedAt:
+                    type: string
+                    format: date-time
+                  modifiedAt:
+                    type: string
+                    format: date-time
+                  modifiedBy:
+                    type: string
+                    format: uuid
+                  createdAt:
+                    type: string
+                    format: date-time
+                  meta:
+                    type: object
+                    properties:
+                      links:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            href:
+                              type: string
+                            rel:
+                              type: string
+                            method:
+                              type: string
+                              enum:
+                                - GET
+                                - POST
+                                - PATCH
+                                - DELETE
+              examples:
+                grade:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    schoolId: 3fa85f64-5717-4562-b3fc-2c963f66afaa
+                    grade: A
+                    subjectId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    type: course
+                    locked: false
+                    registeredAt: '2022-03-28T06:36:23.163Z'
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+    patch:
+      tags:
+        - Students
+        - Grades
+      operationId: updateGradeForStudent
+      requestBody:
+        description: Update a grade for a student. Can only be done if the grade is not locked.
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - changeReason
+              properties:
+                schoolId:
+                  type: string
+                  format: uuid
+                grade:
+                  type: string
+                changeReason:
+                  type: string
+                  enum:
+                    - CHANGE
+                    - CLAIM
+                    - CORRECTION
+                    - TESTOUT
+                subjectId:
+                  type: string
+                  format: uuid
+                type:
+                  type: string
+                locked:
+                  type: boolean
+                registeredAt:
+                  type: string
+                  format: date-time
+                gradingTeacherId:
+                  type: string
+                  format: uuid
+      responses:
+        '204':
+          description: 204 - No content
   '/students/{id}/enrolments':
     parameters:
       - name: id
@@ -1724,10 +1895,106 @@ paths:
                       type: string
                       format: date-time
                       example: '2019-08-06T22:11:11.333Z'
+  '/students/{id}/enrolments/{enrolmentId}':
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: enrolmentId
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Students
+        - Enrolments
+      operationId: getEnrolmentByStudentId
+      responses:
+        '200':
+          description: Retrieve enrolment for a student.
+          content:
+            application/json:
+              schema:
+                description: An Enrolment is a Student that is being taught at a specific school Unit during a specific time period.
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Enrolment ID
+                    example: a9432236-1c94-4880-800b-00d092eef9a6
+                  startDate:
+                    type: string
+                    format: date
+                    description: Date when this enrolment starts. ISO format
+                    example: '2017-01-01'
+                  endDate:
+                    type: string
+                    format: date
+                    description: 'Date when this enrolment ends. May be null if the enrolment does not have grade level yet, so it is not possible to tell when they end their study.'
+                    example: '2117-01-01'
+                  primary:
+                    type: boolean
+                    description: |
+                      The School Unit, where the Student has its primary Enrolment, has the main responsibility of the Student during the period of the Enrolment.
+                      A Student can only have one active primary Enrolment within the same Education Level at a time. Education Level is set on the School Unit.
+                    default: false
+                    example: true
+                  schoolId:
+                    type: string
+                    description: 'uuid of unit, aka external id - reference to school unit in organisation.'
+                    example: '86282718'
+                  gradeLevel:
+                    type: string
+                    description: 'The Current grade level, e.g. ''F'' or ''8''. Not necessarily decided when enrolling. Not available for past and future enrolments.'
+                    example: '7'
+                  modifiedBy:
+                    type: string
+                    format: uuid
+                    description: The person that modified the enrolment last
+                    example: 20b3c146-2d35-404f-8327-258ed06a970e
+                  modifiedAt:
+                    type: string
+                    format: date-time
+                    description: Date when this enrolment was last modified.
+                    example: '2018-10-21T19:21:49.123Z'
+                  createdAt:
+                    type: string
+                    format: date-time
+                    description: Date when this enrolment was last modified.
+                    example: '2018-10-21T19:21:49.123Z'
+                  email:
+                    type: string
+                    description: Email address of current Enrolment.
+                    example: testemail@com.com
+        '404':
+          description: Enrolment could not be found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  trace:
+                    type: string
+                    description: An optional trace id (previously known as contextId) to be able to trace errors through all systems.
+                    format: 'uuid,'
+                  errors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          description: 'a unique identifier for the fault, sent as strings with semantic meaning to help developers understand the problem'
+                        message:
+                          type: string
+                          description: a message to the developer to give further insight into the error. This should not to be displayed to end-user!
 components:
   requestBodies:
     createGradeForStudent:
-      description: Create a a new grade for a student. Locked defaults to false
+      description: Create a new grade for a student. Locked defaults to false
       content:
         application/json:
           schema:
@@ -1752,6 +2019,13 @@ components:
                 type: string
               locked:
                 type: boolean
+              changeReason:
+                type: string
+                enum:
+                  - CHANGE
+                  - CLAIM
+                  - CORRECTION
+                  - TESTOUT
               registeredAt:
                 type: string
                 format: date-time
@@ -1924,6 +2198,40 @@ components:
                 type: string
                 format: date
                 example: null
+    updateGradeForStudent:
+      description: Update a grade for a student. Can only be done if the grade is not locked.
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - changeReason
+            properties:
+              schoolId:
+                type: string
+                format: uuid
+              grade:
+                type: string
+              changeReason:
+                type: string
+                enum:
+                  - CHANGE
+                  - CLAIM
+                  - CORRECTION
+                  - TESTOUT
+              subjectId:
+                type: string
+                format: uuid
+              type:
+                type: string
+              locked:
+                type: boolean
+              registeredAt:
+                type: string
+                format: date-time
+              gradingTeacherId:
+                type: string
+                format: uuid
   schemas:
     BadRequest:
       type: object
@@ -2022,6 +2330,13 @@ components:
           type: string
         locked:
           type: boolean
+        changeReason:
+          type: string
+          enum:
+            - CHANGE
+            - CLAIM
+            - CORRECTION
+            - TESTOUT
         registeredAt:
           type: string
           format: date-time

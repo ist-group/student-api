@@ -18,6 +18,9 @@ properties:
     type: string
   locked:
     type: boolean
+  changeReason:
+    type: string
+    enum: [ CHANGE, CLAIM, CORRECTION, TESTOUT ]
   registeredAt:
     type: string
     format: date-time

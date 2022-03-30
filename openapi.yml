@@ -265,6 +265,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
+  /students/{id}/grades/{gradeId}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: gradeId
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+        - Students
+        - Grades
+      operationId: getGradeForStudent
+      responses:
+        200:
+          description: Retrieve a grade for a student.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Grade"
+              examples:
+                grade:
+                  value:
+                    id: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+                    schoolId: 3fa85f64-5717-4562-b3fc-2c963f66afaa
+                    grade: A
+                    subjectId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    type: course
+                    locked: false
+                    registeredAt: "2022-03-28T06:36:23.163Z"
+                    gradingTeacherId: 3fa85f64-5717-4562-b3fc-2c963f66afa3
+                    meta:
+                      links:
+                        href: /students/1ab85f64-5717-4562-b3fc-2c963f66afa3/grades
+                        rel: self
+                        method: GET
+    patch:
+      tags:
+        - Students
+        - Grades
+      operationId: updateGradeForStudent
+      requestBody:
+        $ref: "#/components/requestBodies/updateGradeForStudent"
+      responses:
+        204:
+          description: 204 - No content
   /students/{id}/enrolments:
     parameters:
       - name: id
@@ -338,6 +388,27 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/NotFound"
+    delete:
+      tags:
+        - Students
+        - Enrolments
+      operationId: RemoveStudentEnrolment
+      description: Remove an enrolment for a student.
+      responses:
+        204:
+          description: Enrolment removed. No response
+        404:
+          description: Student or enrolment with id not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        401:
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 components:
   requestBodies:
     createGradeForStudent:
@@ -349,7 +420,9 @@ components:
     createEnrolment:
       $ref: "./requests/createEnrolmentForStudent.yml"
     updateStudent:
-      $ref: "./requests/updateStudent.yaml"
+      $ref: "./requests/updateStudent.yml"
+    updateGradeForStudent:
+      $ref: "./requests/updateGradeForStudent.yml"
   schemas:
     BadRequest:
       $ref: "./errors/400.yaml#/BadRequest"

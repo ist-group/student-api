@@ -1,21 +1,19 @@
-description: Create a new grade for a student. Locked defaults to false
+description: Update a grade for a student. Can only be done if the grade is not locked.
 content:
   application/json:
     schema:
       type: object
       required:
-      - schoolId
-      - grade
-      - type
-      - subjectId
-      - gradingTeacherId
-      - registeredAt
+      - changeReason
       properties:
         schoolId:
           type: string
           format: uuid
         grade:
           type: string
+        changeReason:
+          type: string
+          enum: [ CHANGE, CLAIM, CORRECTION, TESTOUT ]
         subjectId:
           type: string
           format: uuid
@@ -23,9 +21,6 @@ content:
           type: string
         locked:
           type: boolean
-        changeReason:
-          type: string
-          enum: [ CHANGE, CLAIM, CORRECTION, TESTOUT ]
         registeredAt:
           type: string
           format: date-time
