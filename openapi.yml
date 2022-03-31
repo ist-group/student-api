@@ -409,6 +409,60 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
+  /students/{id}/individual-studyplan:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+        - Students
+        - Individual Studyplan
+      operationId: getISPsForStudent
+      responses:
+        200:
+          description: Retrieve individual studyplan for a student.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ISP"
+  /students/{id}/individual-studyplan/{ispId}:
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: ispId
+      in: path
+      required: true
+      schema:
+        type: string
+    delete:
+      tags:
+        - Students
+        - Individual Studyplan
+      operationId: RemoveISPById
+      description: Remove an absence for a student.
+      responses:
+        204:
+          description: ISP removed. No response returned
+        404:
+          description: Student or ISP not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
+        401:
+          description: Operation not permitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
 components:
   requestBodies:
     createGradeForStudent:
@@ -438,6 +492,8 @@ components:
       $ref: "./entities/Student.yml"
     Enrolment:
       $ref: "./entities/Enrolment.yml"
+    IndividualStudyplan:
+      $ref: "./entities/IndividualStudyplan.yml"
     # Teacher:
     #   $ref: "./entities/Teacher.yml#/Teacher"
     # Guardian:
