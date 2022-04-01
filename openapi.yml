@@ -33,9 +33,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Student"
-  /students/{id}:
+  /students/{studentId}:
     parameters:
-      - name: id
+      - name: studentId
         in: path
         required: true
         schema:
@@ -99,9 +99,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
-  /students/{id}/absences:
+  /students/{studentId}/absences:
     parameters:
-      - name: id
+      - name: studentId
         in: path
         required: true
         schema:
@@ -134,9 +134,9 @@ paths:
             application/json:
               schema:
                   $ref: "#/components/schemas/Absence"
-  /students/{id}/absences/{absenceId}:
+  /students/{studentId}/absences/{absenceId}:
     parameters:
-      - name: id
+      - name: studentId
         in: path
         required: true
         schema:
@@ -190,9 +190,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
-  /students/{id}/grades:
+  /students/{studentId}/grades:
     parameters:
-    - name: id
+    - name: studentId
       in: path
       required: true
       schema:
@@ -265,9 +265,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/BadRequest"
-  /students/{id}/grades/{gradeId}:
+  /students/{studentId}/grades/{gradeId}:
     parameters:
-    - name: id
+    - name: studentId
       in: path
       required: true
       schema:
@@ -315,9 +315,9 @@ paths:
       responses:
         204:
           description: 204 - No content
-  /students/{id}/enrolments:
+  /students/{studentId}/enrolments:
     parameters:
-      - name: id
+      - name: studentId
         in: path
         required: true
         schema:
@@ -358,9 +358,9 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Student"
-  /students/{id}/enrolments/{enrolmentId}:
+  /students/{studentId}/enrolments/{enrolmentId}:
     parameters:
-      - name: id
+      - name: studentId
         in: path
         required: true
         schema:
@@ -409,9 +409,9 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Unauthorized"
-  /students/{id}/individual-studyplan:
+  /students/{studentId}/individual-studyplans:
     parameters:
-    - name: id
+    - name: studentId
       in: path
       required: true
       schema:
@@ -429,10 +429,10 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ISP"
-  /students/{id}/individual-studyplan/{ispId}:
+                  $ref: "#/components/schemas/IndividualStudyplan"
+  /students/{studentId}/individual-studyplans/{ispId}:
     parameters:
-    - name: id
+    - name: studentId
       in: path
       required: true
       schema:
@@ -442,11 +442,35 @@ paths:
       required: true
       schema:
         type: string
+    get:
+      tags:
+        - Students
+        - Individual Studyplans
+      operationId: getISPForStudent
+      responses:
+        200:
+          description: Retrieve individual studyplan for a student.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IndividualStudyplan"
+        403:
+          description: Not enough permissions to read this resource
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Unauthorized"
+        404:
+          description: Student or ISP not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotFound"
     delete:
       tags:
         - Students
-        - Individual Studyplan
-      operationId: RemoveISPById
+        - Individual Studyplans
+      operationId: removeISPById
       description: Remove an absence for a student.
       responses:
         204:
