@@ -32,7 +32,6 @@ properties:
           type: string
         followTimeplan:
           type: boolean
-          
   meta:
     type: object
     properties:
